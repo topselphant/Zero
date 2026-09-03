@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ZERO // COUNTDOWN</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{
+  display:flex;align-items:center;justify-content:center;
+  background:#020403;color:#00ff9c;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent 0 3px,#00ff9c08 4px);
+}
+body:after{
+  content:"";position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(circle at center,transparent 35%,#000b 100%);
+}
+.panel{
+  width:min(900px,92vw);padding:clamp(25px,6vw,60px);
+  border:1px solid #00ff9c88;
+  background:#03100b;
+  box-shadow:0 0 35px #00ff9c22,inset 0 0 40px #00ff9c0b;
+  position:relative;
+}
+.corner{position:absolute;width:18px;height:18px;border-color:#00ff9c;border-style:solid}
+.c1{top:-1px;left:-1px;border-width:2px 0 0 2px}
+.c2{top:-1px;right:-1px;border-width:2px 2px 0 0}
+.c3{bottom:-1px;left:-1px;border-width:0 0 2px 2px}
+.c4{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+.header{display:flex;justify-content:space-between;gap:20px;font-size:12px;letter-spacing:4px;opacity:.75}
+.title{margin:28px 0 8px;font-size:clamp(28px,7vw,72px);font-weight:800;letter-spacing:6px;text-shadow:0 0 18px #00ff9c}
+.target{font-size:12px;letter-spacing:3px;opacity:.6}
+.count{margin:35px 0 12px;text-align:center;font-size:clamp(35px,10vw,105px);font-weight:700;letter-spacing:4px;text-shadow:0 0 12px #00ff9c,0 0 35px #00ff9c44}
+.labels{display:flex;justify-content:center;gap:clamp(12px,5vw,60px);font-size:10px;letter-spacing:2px;opacity:.5}
+.status{margin-top:35px;text-align:center;font-size:11px;letter-spacing:4px;animation:blink 1.3s infinite}
+@keyframes blink{50%{opacity:.25}}
+.glitch{animation:glitch .18s linear}
+@keyframes glitch{0%{transform:translate(0)}35%{transform:translate(-2px,1px)}70%{transform:translate(2px,-1px)}100%{transform:translate(0)}}
+@media(max-width:500px){.header{font-size:9px}.count{letter-spacing:1px}.labels{gap:8px;font-size:8px}}
+</style>
+</head>
+<body>
+<main class="panel">
+  <i class="corner c1"></i><i class="corner c2"></i><i class="corner c3"></i><i class="corner c4"></i>
+  <div class="header"><span>ZERO // SYSTEM</span><span>STATUS: ACTIVE</span></div>
+  <div class="title">COUNTDOWN</div>
+  <div class="target">TARGET // 04.10.2026 // 00:00:00</div>
+  <div id="count" class="count">-- : -- : -- : --</div>
+  <div class="labels"><span>DAYS</span><span>HOURS</span><span>MINUTES</span><span>SECONDS</span></div>
+  <div id="status" class="status">◉ SYSTEM WAITING FOR TARGET</div>
+</main>
+<script>
+const target = new Date("2026-10-04T00:00:00");
+const count = document.getElementById("count");
+const status = document.getElementById("status");
+function pad(n){return String(n).padStart(2,"0")}
+function update(){
+  let d = target - new Date();
+  if(d <= 0){
+    count.textContent="00 : 00 : 00 : 00";
+    status.textContent="◉ TARGET REACHED // ZERO";
+    return;
+  }
+  const days=Math.floor(d/86400000); d%=86400000;
+  const hours=Math.floor(d/3600000); d%=3600000;
+  const mins=Math.floor(d/60000); d%=60000;
+  const secs=Math.floor(d/1000);
+  count.textContent=`${pad(days)} : ${pad(hours)} : ${pad(mins)} : ${pad(secs)}`;
+  status.textContent="◉ COUNTDOWN ACTIVE // T-MINUS";
+}
+update();
+setInterval(update,1000);
+setInterval(()=>{count.classList.add("glitch");setTimeout(()=>count.classList.remove("glitch"),180)},7000);
+</script>
+</body>
+</html>
